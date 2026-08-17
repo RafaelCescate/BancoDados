@@ -1,7 +1,7 @@
 CREATE DATABASE app_academia;
-USE appAcademia;
+USE app_academia;
 
-CREEATE TABLE aluno(
+CREATE TABLE aluno(
 	nome VARCHAR(100),
 	codigo int,
 	plano VARCHAR(50),
