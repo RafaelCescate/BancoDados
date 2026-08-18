@@ -1,0 +1,39 @@
+CREATE DATABASE app_academia;
+USE app_academia;
+
+CREATE TABLE aluno(
+	nome VARCHAR(100),
+	codigo int,
+	plano VARCHAR(50),
+	contato VARCHAR(50),
+	senhaApp VARCHAR(50)
+);
+
+CREATE TABLE personal(
+	certificado VARCHAR(100),
+	nome VARCHAR(100),
+	cpf int,
+	contato VARCHAR(50),
+	senhaApp VARCHAR(50)
+);
+
+CREATE TABLE treino(
+	equipamento VARCHAR(100),
+	repetições int,
+	peso int,
+	descanso int,
+	tipoTreinoDia VARCHAR(10)
+);
+
+CREATE TABLE equipamento(
+	nome VARCHAR(100),
+	quantidade int
+);
+
+CREATE TABLE academia(
+	endereco VARCHAR(100),
+	cnpj int,
+	horario int,
+	contato VARCHAR(50),
+	planos VARCHAR(200)
+);
