@@ -1,0 +1,11 @@
+CREATE DATABASE *nome do banco de dados*;
+USE *nome do banco de dados*;
+
+CREATE TABLE *nome da tabela*(
+  *nome da variável* *tipo*;  
+);
+
+DROP DATABASE *nome do bando de dados*;
+DROP TABLE *nome da tabela*;
+INSERT INTO *nome da tabela* (*colunas que serão manipuladas separas por ","*);
+VAlUES(*valores que serão atribuídos seguindo a ordem das colunas do INSERT INTO*);
