@@ -1,0 +1,44 @@
+CREATE DATABASE app_academia;
+USE app_academia;
+
+CREATE TABLE aluno(
+	cpf_aluno VARCHAR(20) primary key,
+	cpf_personal VARCHAR(20), //chave estrangeira
+
+	nome VARCHAR(100),
+	codigo int,
+	plano VARCHAR(50),
+	contato VARCHAR(50),
+	senhaApp VARCHAR(50)
+);
+
+CREATE TABLE personal(
+	cpf_personal VARCHAR(20) primary key,
+	
+	certificado VARCHAR(100),
+	nome VARCHAR(100),
+	cpf int,
+	contato VARCHAR(50),
+	senhaApp VARCHAR(50)
+);
+
+CREATE TABLE equipamento(
+	id_equipamento VARCHAR(10) primary key,
+	
+	nome VARCHAR(100),
+	quantidade int
+);
+
+CREATE TABLE treino(
+	cpf_aluno VARCHAR(20) primary key,
+	cpf_personal VARCHAR(20) primary key,
+	dia VARCHAR(10) primary key,
+	equipamento VARCHAR(100) primary key,
+	//talvez essas 4 chaves simples virem uma única chave composta
+
+	serie int,
+	repetições int,
+	peso int,
+	descanso int,
+	tipoTreinoDia VARCHAR(10)
+);
