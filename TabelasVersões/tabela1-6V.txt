@@ -1,0 +1,69 @@
+CREATE DATABASE app_academia;
+USE app_academia;
+
+CREATE TABLE aluno(
+
+	cpf_aluno VARCHAR(20) not null unique primary key,
+	cpf_personal VARCHAR(20),
+
+	nome VARCHAR(100) not null,
+	plano VARCHAR(50) not null,
+	contato VARCHAR(50) not null,
+	senhaApp VARCHAR(50) check(senhaApp >= 8)
+);
+
+CREATE TABLE personal(
+	cpf_personal VARCHAR(20) not null unique primary key,
+	cpf_aluno VARCHAR(20),
+	
+	certificado VARCHAR(100) not null,
+	nome VARCHAR(100) not null,
+	contato VARCHAR(50) not null,
+	senhaApp VARCHAR(50) check(senhaApp >= 8)
+);
+
+CREATE TABLE equipamento(
+
+	id_equipamento int auto_increment primary key,
+	
+	nome VARCHAR(100) not null,
+	quantidade int check (quantidade >0)
+);
+
+CREATE TABLE treino(
+
+	dia VARCHAR(10) not null primary key,
+	cpf_personal VARCHAR(20),	
+	cpf_aluno VARCHAR(20),
+	id_equipamento int,	
+
+	serie int not null check (serie > 0),
+	repeticoes int not null check (repeticoes > 0),
+	peso int check (peso > 0),
+	tipoTreinoDia VARCHAR(10) not null
+);
+
+alter table aluno
+add constraint fk_aluno_personal
+foreign key (cpf_personal)
+references personal(cpf_personal);
+
+alter table personal
+add constraint fk_personal_aluno
+foreign key (cpf_aluno)
+references personal(cpf_aluno);
+
+alter table treino
+add constraint fk_treino_personal
+foreign key (cpf_personal)
+references personal(cpf_personal);
+
+alter table treino
+add constraint fk_treino_aluno
+foreign key (cpf_aluno)
+references personal(cpf_aluno);
+
+alter table treino
+add constraint fk_treino_equipamento
+foreign key (id_equipamento)
+references personal(id_equipamento);
