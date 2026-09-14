@@ -156,8 +156,6 @@ SELECT nome, plano, contato
 FROM aluno
 WHERE plano = 'Mensal';
 
-
--- Selecionar equipamentos disponíveis
 SELECT nome, quantidade
 FROM equipamento
 WHERE quantidade > 0;
