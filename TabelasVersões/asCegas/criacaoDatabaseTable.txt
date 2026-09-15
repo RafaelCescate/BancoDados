@@ -1,0 +1,56 @@
+CREATE DATABASE app_academia;
+
+USE app_academia;
+
+CREATE TABLE personal (
+    cpf_personal VARCHAR(20) NOT NULL,
+    certificado VARCHAR(100) NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    contato VARCHAR(50) NOT NULL,
+    senhaApp VARCHAR(50) NOT NULL,
+
+    CONSTRAINT ck_personal_senha
+        CHECK (CHAR_LENGTH(senhaApp) >= 8)
+);
+
+CREATE TABLE aluno (
+    cpf_aluno VARCHAR(20) NOT NULL,
+    cpf_personal VARCHAR(20) NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    plano VARCHAR(50) NOT NULL,
+    contato VARCHAR(50) NOT NULL,
+    senhaApp VARCHAR(50) NOT NULL,
+
+    CONSTRAINT ck_aluno_senha
+        CHECK (CHAR_LENGTH(senhaApp) >= 8),
+);
+
+CREATE TABLE equipamento (
+    id_equipamento INT NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    quantidade INT NOT NULL,
+
+    CONSTRAINT ck_equipamento_quantidade
+        CHECK (quantidade >= 0)
+);
+
+CREATE TABLE treino (
+    id_treino INT NOT NULL AUTO_INCREMENT,
+    dia VARCHAR(10) NOT NULL,
+    cpf_personal VARCHAR(20) NOT NULL,
+    cpf_aluno VARCHAR(20) NOT NULL,
+    id_equipamento INT NOT NULL,
+    serie INT NOT NULL,
+    repeticoes INT NOT NULL,
+    peso DECIMAL(6,2) NOT NULL DEFAULT 0,
+    tipoTreinoDia VARCHAR(30) NOT NULL,
+
+    CONSTRAINT ck_treino_serie
+        CHECK (serie > 0),
+
+    CONSTRAINT ck_treino_repeticoes
+        CHECK (repeticoes > 0),
+
+    CONSTRAINT ck_treino_peso
+        CHECK (peso >= 0),
+);

@@ -1,0 +1,11 @@
+Uma procedure que quando o treino acaba ela modifica a quantidade de equipamentos disponíveis.
+CREATE PROCEDURE sp_fim_treino_aluno(IN p_cpf_aluno VARCHAR(20))
+BEGIN
+	SELECT a.id_equipamento, c.id_equipamento, c.nome
+	FROM treino a
+	UPTADE equipamento c
+	SET quantidade 	= quantidade+1
+	WHERE c.id_equipamento = a.id_equipamento;
+END;
+
+CALL sp_fim_treino_aluno('789');

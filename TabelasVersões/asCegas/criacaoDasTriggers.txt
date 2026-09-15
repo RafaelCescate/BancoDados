@@ -1,0 +1,7 @@
+Uma trigger que verifica se um equipamento está disponível para ser usado na montagem do treino.
+CREATE TRIGGER trg_validar_treino
+BEFORE INSERT ON treino
+FOR EACH ROW
+BEGIN
+	
+END;

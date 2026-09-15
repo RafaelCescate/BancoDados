@@ -1,0 +1,35 @@
+ALTER TABLE personal
+ADD CONSTRAINT pk_personal
+PRIMARY KEY (cpf_personal);
+
+ALTER TABLE aluno
+CONSTRAINT pk_aluno
+PRIMARY KEY (cpf_aluno);
+
+ALTER TABLE aluno
+CONSTRAINT fk_aluno_personal
+FOREIGN KEY (cpf_personal)
+REFERENCES personal(cpf_personal);
+
+ALTER TABLE equipamento
+CONSTRAINT pk_equipamento
+PRIMARY KEY (id_equipamento);
+
+ALTER TABLE treino
+CONSTRAINT pk_treino
+PRIMARY KEY (id_treino);
+
+ALTER TABLE treino
+CONSTRAINT fk_treino_personal
+FOREIGN KEY (cpf_personal)
+REFERENCES personal(cpf_personal);
+
+ALTER TABLE treino
+CONSTRAINT fk_treino_aluno
+FOREIGN KEY (cpf_aluno)
+REFERENCES aluno(cpf_aluno);
+
+ALTER TABLE treino
+CONSTRAINT fk_treino_equipamento
+FOREIGN KEY (id_equipamento)
+REFERENCES equipamento(id_equipamento);

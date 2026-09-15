@@ -1,0 +1,68 @@
+INSERT INTO personal
+(cpf_personal, certificado, nome, contato, senhaApp)
+VALUES
+('191', 'Aprovado', 'Cleber', 'telefone', 'amendoim');
+
+INSERT INTO aluno
+(cpf_aluno, cpf_personal, nome, plano, contato, senhaApp)
+VALUES
+('789', '191', 'Luiz', 'Mensal', 'telefone', 'laranjada');
+
+INSERT INTO equipamento
+(id_equipamento, nome, quantidade)
+VALUES
+(1, 'Esteira', 1),
+(2, 'Supino', 2),
+(3, 'Leg Press', 1);
+
+INSERT INTO treino
+(dia, cpf_personal, cpf_aluno, id_equipamento,
+ serie, repeticoes, peso, tipoTreinoDia)
+VALUES
+('segunda', '191', '789', 3, 10, 12, 30, 'perna');
+
+SELECT *
+FROM personal;
+
+SELECT *
+FROM aluno;
+
+SELECT *
+FROM equipamento;
+
+SELECT *
+FROM treino;
+
+SELECT nome, plano, contato
+FROM aluno
+WHERE plano = 'Mensal';
+
+SELECT nome, quantidade
+FROM equipamento
+WHERE quantidade > 0;
+
+SELECT
+    aluno.nome AS aluno,
+    personal.nome AS personal,
+    aluno.plano,
+    aluno.contato
+FROM aluno
+INNER JOIN personal
+    ON aluno.cpf_personal = personal.cpf_personal;
+
+SELECT
+    treino.dia,
+    aluno.nome AS aluno,
+    personal.nome AS personal,
+    equipamento.nome AS equipamento,
+    treino.serie,
+    treino.repeticoes,
+    treino.peso,
+    treino.tipoTreinoDia
+FROM treino
+INNER JOIN aluno
+    ON treino.cpf_aluno = aluno.cpf_aluno
+INNER JOIN personal
+    ON treino.cpf_personal = personal.cpf_personal
+INNER JOIN equipamento
+    ON treino.id_equipamento = equipamento.id_equipamento;

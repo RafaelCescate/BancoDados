@@ -1,0 +1,25 @@
+uma view que mostra quais alunos estão usando o leg press
+CREATE VIEW vw_aluno_equi_legpress AS 
+SELECT
+	id_treino, cpf_aluno, dia
+FROM treino
+WHERE id_equipamento = 3;
+
+
+
+uma view que mostra quantos alunos vão treinar em determinado dia
+CREATE VIEW vw_aluno_dia AS 
+SELECT
+	cpf_aluno,
+	COUNT(dia) AS quantidade_alunos
+FROM treino
+GROUP BY dia;
+
+
+
+uma view que mostra quais são os alunos de determinado personal
+CREATE VIEW vw_alunos_personal AS 
+SELECT
+	nome, personal.nome
+FROM aluno
+WHERE cpf_personal = "191";
