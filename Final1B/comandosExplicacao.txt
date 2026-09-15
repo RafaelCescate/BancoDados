@@ -1,0 +1,25 @@
+EXPLICAÇÃO TRIGGER INTEGRADA
+-- O que a trigger fez através da procedure (deve mostrar Esteira, Supino, Leg Press, Bicicleta)
+SELECT * FROM equipamentos_disponiveis;
+
+
+EXPLICAÇÃO VIEW
+-- View vw_aluno_equi_legpress: deve trazer os 2 treinos que usaram o Leg Press
+SELECT * FROM vw_aluno_equi_legpress;
+
+-- View vw_aluno_dia: deve mostrar 'segunda' com 3 treinos, 'quarta' com 1, 'quinta' com 1, 'sexta' com 1
+SELECT * FROM vw_aluno_dia;
+
+-- View vw_alunos_personal: deve mostrar os 4 pares aluno-personal
+SELECT * FROM vw_alunos_personal;
+
+
+EXPLICAÇÃO PROCEDURE
+-- Antes: Leg Press (id 3) esta com quantidade = 1
+SELECT * FROM equipamento WHERE id_equipamento = 3;
+
+-- Chamando a procedure para o aluno 789 (que treinou com o Leg Press)
+CALL sp_fim_treino_aluno('789');
+
+-- Depois: a quantidade do Leg Press deve ter subido em +1
+SELECT * FROM equipamento WHERE id_equipamento = 3;
