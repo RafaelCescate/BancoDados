@@ -1,0 +1,221 @@
+CREATE DATABASE app_academia;
+
+USE app_academia;
+
+CREATE TABLE personal (
+    cpf_personal VARCHAR(20) NOT NULL,
+    certificado VARCHAR(100) NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    contato VARCHAR(50) NOT NULL,
+    senhaApp VARCHAR(50) NOT NULL,
+
+    CONSTRAINT pk_personal
+        PRIMARY KEY (cpf_personal),
+
+    CONSTRAINT ck_personal_senha
+        CHECK (CHAR_LENGTH(senhaApp) >= 8)
+);
+
+CREATE TABLE aluno (
+    cpf_aluno VARCHAR(20) NOT NULL,
+    cpf_personal VARCHAR(20) NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    plano VARCHAR(50) NOT NULL,
+    contato VARCHAR(50) NOT NULL,
+    senhaApp VARCHAR(50) NOT NULL,
+
+    CONSTRAINT pk_aluno
+        PRIMARY KEY (cpf_aluno),
+
+    CONSTRAINT ck_aluno_senha
+        CHECK (CHAR_LENGTH(senhaApp) >= 8),
+
+    CONSTRAINT fk_aluno_personal
+        FOREIGN KEY (cpf_personal)
+        REFERENCES personal(cpf_personal)
+);
+
+CREATE TABLE equipamento (
+    id_equipamento INT NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    quantidade INT NOT NULL,
+
+    CONSTRAINT pk_equipamento
+        PRIMARY KEY (id_equipamento),
+
+    CONSTRAINT ck_equipamento_quantidade
+        CHECK (quantidade >= 0)
+);
+
+CREATE TABLE treino (
+    id_treino INT NOT NULL AUTO_INCREMENT,
+    dia VARCHAR(10) NOT NULL,
+    cpf_personal VARCHAR(20) NOT NULL,
+    cpf_aluno VARCHAR(20) NOT NULL,
+    id_equipamento INT NOT NULL,
+    serie INT NOT NULL,
+    repeticoes INT NOT NULL,
+    peso DECIMAL(6,2) NOT NULL DEFAULT 0,
+    tipoTreinoDia VARCHAR(30) NOT NULL,
+
+    CONSTRAINT pk_treino
+        PRIMARY KEY (id_treino),
+
+    CONSTRAINT ck_treino_serie
+        CHECK (serie > 0),
+
+    CONSTRAINT ck_treino_repeticoes
+        CHECK (repeticoes > 0),
+
+    CONSTRAINT ck_treino_peso
+        CHECK (peso >= 0),
+
+    CONSTRAINT fk_treino_personal
+        FOREIGN KEY (cpf_personal)
+        REFERENCES personal(cpf_personal),
+
+    CONSTRAINT fk_treino_aluno
+        FOREIGN KEY (cpf_aluno)
+        REFERENCES aluno(cpf_aluno),
+
+    CONSTRAINT fk_treino_equipamento
+        FOREIGN KEY (id_equipamento)
+        REFERENCES equipamento(id_equipamento)
+);
+
+CREATE TABLE equipamentos_disponiveis (
+    id_equipamento INT NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    quantidade INT NOT NULL,
+
+    CONSTRAINT pk_equipamentos_disponiveis
+        PRIMARY KEY (id_equipamento)
+);
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_fim_treino_aluno(IN p_cpf_aluno VARCHAR(20))
+BEGIN
+    UPDATE equipamento
+    SET quantidade = quantidade + 1
+    WHERE id_equipamento IN (
+        SELECT id_equipamento
+        FROM treino
+        WHERE cpf_aluno = p_cpf_aluno
+    );
+END $$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_mostrar_equipamentos_disponiveis()
+BEGIN
+    DELETE FROM equipamentos_disponiveis;
+
+    INSERT INTO equipamentos_disponiveis (id_equipamento, nome, quantidade)
+    SELECT id_equipamento, nome, quantidade
+    FROM equipamento
+    WHERE quantidade > 0;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER trg_verifica_disponibilidade_equipamento 
+BEFORE INSERT ON treino
+FOR EACH ROW
+BEGIN
+    DECLARE v_quantidade INT;
+
+    SELECT quantidade
+    INTO v_quantidade
+    FROM equipamento
+    WHERE id_equipamento = NEW.id_equipamento;
+
+    IF v_quantidade <= 0 THEN
+
+        CALL sp_mostrar_equipamentos_disponiveis();
+
+    END IF;
+
+END $$
+
+DELIMITER ;
+
+CREATE VIEW vw_aluno_equi_legpress AS 
+SELECT
+	id_treino, cpf_aluno, dia
+FROM treino
+WHERE id_equipamento = 3;
+
+CREATE VIEW vw_aluno_dia AS 
+SELECT
+	dia,
+	COUNT(dia) AS quantidade_alunos
+FROM treino
+GROUP BY dia;
+
+CREATE VIEW vw_alunos_personal AS 
+SELECT
+	a.nome AS nome_aluno,
+	c.nome AS nome_personal
+FROM aluno a
+INNER JOIN personal c
+    ON a.cpf_personal = c.cpf_personal;
+
+INSERT INTO personal
+(cpf_personal, certificado, nome, contato, senhaApp)
+VALUES
+('191', 'Aprovado', 'Cleber', 'telefone', 'amendoim'),
+('192', 'Aprovado', 'Marina', 'telefone', 'castanha1'),
+('193', 'Aprovado', 'Roberto', 'telefone', 'girassol9');
+
+INSERT INTO aluno
+(cpf_aluno, cpf_personal, nome, plano, contato, senhaApp)
+VALUES
+('789', '191', 'Luiz', 'Mensal', 'telefone', 'laranjada'),
+('790', '191', 'Fernanda', 'Trimestral', 'telefone', 'melancia1'),
+('791', '192', 'Bruno', 'Mensal', 'telefone', 'abacaxi12'),
+('792', '193', 'Carla', 'Anual', 'telefone', 'framboesa');
+
+INSERT INTO equipamento
+(id_equipamento, nome, quantidade)
+VALUES
+(1, 'Esteira', 2),
+(2, 'Supino', 3),
+(3, 'Leg Press', 1),
+(4, 'Halteres', 0),
+(5, 'Bicicleta Ergometrica', 2);
+
+INSERT INTO treino
+(dia, cpf_personal, cpf_aluno, id_equipamento, serie, repeticoes, peso, tipoTreinoDia)
+VALUES
+('segunda', '191', '789', 3, 4, 10, 30, 'perna');
+
+INSERT INTO treino
+(dia, cpf_personal, cpf_aluno, id_equipamento, serie, repeticoes, peso, tipoTreinoDia)
+VALUES
+('quarta', '191', '790', 3, 3, 12, 25, 'perna');
+
+INSERT INTO treino
+(dia, cpf_personal, cpf_aluno, id_equipamento, serie, repeticoes, peso, tipoTreinoDia)
+VALUES
+('segunda', '192', '791', 1, 1, 20, 0, 'cardio');
+
+INSERT INTO treino
+(dia, cpf_personal, cpf_aluno, id_equipamento, serie, repeticoes, peso, tipoTreinoDia)
+VALUES
+('segunda', '193', '792', 2, 4, 8, 40, 'peito');
+
+INSERT INTO treino
+(dia, cpf_personal, cpf_aluno, id_equipamento, serie, repeticoes, peso, tipoTreinoDia)
+VALUES
+('quinta', '191', '789', 5, 1, 15, 0, 'cardio');
+
+INSERT INTO treino
+(dia, cpf_personal, cpf_aluno, id_equipamento, serie, repeticoes, peso, tipoTreinoDia)
+VALUES
+('sexta', '192', '791', 4, 3, 12, 8, 'braco');
